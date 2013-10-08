@@ -1,9 +1,9 @@
 package com.github.jimmyrengga.sample.android;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
+
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.google.android.gms.auth.GoogleAuthUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,27 +20,27 @@ import java.net.URL;
 public abstract class AbstractGetInfoTask extends AsyncTask<Void, Void, Void> {
     private static final String TAG = "TokenInfoTask";
     private static final String NAME_KEY = "given_name";
+    protected MainActivity mActivity;
 
-    protected MainActivity mainActivity;
-    protected String scope;
-    protected String email;
-    protected int requestCode;
+    protected String mScope;
+    protected String mEmail;
+    protected int mRequestCode;
 
-    public AbstractGetInfoTask(MainActivity mainActivity, String scope, String email, int requestCode) {
-        this.mainActivity = mainActivity;
-        this.scope = scope;
-        this.email = email;
-        this.requestCode = requestCode;
+    AbstractGetInfoTask(MainActivity activity, String email, String scope, int requestCode) {
+        this.mActivity = activity;
+        this.mScope = scope;
+        this.mEmail = email;
+        this.mRequestCode = requestCode;
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
-        try{
+    protected Void doInBackground(Void... params) {
+        try {
             fetchNameFromProfileServer();
-        } catch(IOException ioe) {
-            onError("Following Error occured, please try again. " + ioe.getMessage(), ioe);
-        } catch(JSONException jsone) {
-            onError("Bad response: " + jsone.getMessage(), jsone);
+        } catch (IOException ex) {
+            onError("Following Error occured, please try again. " + ex.getMessage(), ex);
+        } catch (JSONException e) {
+            onError("Bad response: " + e.getMessage(), e);
         }
         return null;
     }
@@ -49,11 +49,22 @@ public abstract class AbstractGetInfoTask extends AsyncTask<Void, Void, Void> {
         if (e != null) {
             Log.e(TAG, "Exception: ", e);
         }
-        mainActivity.show(msg);
+        mActivity.show(msg);  // will be run in UI thread
     }
 
+    /**
+     * Get a authentication token if one is not available. If the error is not recoverable then
+     * it displays the error message on parent activity.
+     */
     protected abstract String fetchToken() throws IOException;
 
+    /**
+     * Contacts the user info server to get the profile of the user and extracts the first name
+     * of the user from the profile. In order to authenticate with the user info server the method
+     * first fetches an access token from Google Play services.
+     * @throws IOException if communication with user info server failed.
+     * @throws JSONException if the response from the server could not be parsed.
+     */
     private void fetchNameFromProfileServer() throws IOException, JSONException {
         String token = fetchToken();
         if (token == null) {
@@ -66,11 +77,11 @@ public abstract class AbstractGetInfoTask extends AsyncTask<Void, Void, Void> {
         if (sc == 200) {
             InputStream is = con.getInputStream();
             String name = getFirstName(readResponse(is));
-            mainActivity.show("Hello " + name + "!");
+            mActivity.show("Hello " + name + "!");
             is.close();
             return;
         } else if (sc == 401) {
-            GoogleAuthUtil.invalidateToken(mainActivity, token);
+            GoogleAuthUtil.invalidateToken(mActivity, token);
             onError("Server auth error, please try again.", null);
             Log.i(TAG, "Server auth error: " + readResponse(con.getErrorStream()));
             return;
@@ -80,6 +91,9 @@ public abstract class AbstractGetInfoTask extends AsyncTask<Void, Void, Void> {
         }
     }
 
+    /**
+     * Reads the response from the input stream and returns it as a string.
+     */
     private static String readResponse(InputStream is) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] data = new byte[2048];

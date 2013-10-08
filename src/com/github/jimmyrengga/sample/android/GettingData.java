@@ -12,18 +12,21 @@ import java.io.IOException;
  */
 public class GettingData extends AbstractGetInfoTask {
 
-    public GettingData(MainActivity mainActivity, String scope, String email, int requestCode) {
-        super(mainActivity, scope, email, requestCode);
+    public GettingData(MainActivity activity, String email, String scope, int requestCode) {
+        super(activity, email, scope, requestCode);
     }
 
     @Override
     protected String fetchToken() throws IOException {
         try {
-            return GoogleAuthUtil.getToken(mainActivity, email, scope);
-        } catch (GooglePlayServicesAvailabilityException playEx){
-            mainActivity.showErrorDialog(playEx.getConnectionStatusCode());
-        } catch (UserRecoverableAuthException e) {
-            mainActivity.startActivityForResult(e.getIntent(), requestCode);
+            return GoogleAuthUtil.getToken(mActivity, mEmail, mScope);
+        } catch (GooglePlayServicesAvailabilityException playEx) {
+            // GooglePlayServices.apk is either old, disabled, or not present.
+            mActivity.showErrorDialog(playEx.getConnectionStatusCode());
+        } catch (UserRecoverableAuthException userRecoverableException) {
+            // Unable to authenticate, but the user can fix this.
+            // Forward the user to the appropriate activity.
+            mActivity.startActivityForResult(userRecoverableException.getIntent(), mRequestCode);
         } catch (GoogleAuthException fatalException) {
             onError("Unrecoverable error " + fatalException.getMessage(), fatalException);
         }
