@@ -12,3 +12,5 @@ target
 .idea
 logs
 out
+
+gen-external-apklibs
