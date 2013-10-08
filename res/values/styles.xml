@@ -1,0 +1,57 @@
+<resources>
+
+    <style name="LoginFormContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+    </style>
+    
+    <style name="listViewHeaderItem">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/headingTextSize</item>
+        <item name="android:paddingLeft">@dimen/headingPaddingLeft</item>
+    </style>
+
+    <style name="listViewItem">
+        <item name="android:layout_height">@dimen/itemHeight</item>
+        <item name="android:clickable">false</item>
+    </style>
+    
+    <style name="listViewPrimaryDetail">
+        <item name="android:paddingTop">@dimen/primaryPaddingTop</item>
+        <item name="android:paddingBottom">@dimen/primaryPaddingBottom</item>
+        <item name="android:paddingLeft">@dimen/primaryPaddingLeft</item>
+        <item name="android:textSize">@dimen/primaryTextSize</item>
+    </style>
+
+    <style name="listViewSecondaryDetail">
+        <item name="android:paddingTop">@dimen/secondaryPaddingTop</item>
+        <item name="android:paddingBottom">@dimen/secondaryPaddingBottom</item>
+        <item name="android:paddingLeft">@dimen/secondaryPaddingLeft</item>
+        <item name="android:textSize">@dimen/secondaryTextSize</item>
+    </style>
+
+    <style name="listViewVerticalDivider">
+        <item name="android:layout_marginTop">@dimen/dividerMargin</item>
+        <item name="android:layout_marginBottom">@dimen/dividerMargin</item>
+        <item name="android:layout_width">@dimen/dividerWidth</item>
+    </style>
+
+    <style name="listViewSectionDividerVerticalDivider">
+        <item name="android:layout_width">@dimen/dividerWidth</item>
+        <item name="android:layout_marginTop">@dimen/sectionDividerMargin</item>
+        <item name="android:layout_marginBottom">@dimen/sectionDividerMargin</item>
+    </style>
+    
+    <style name="listViewItemButtonStyle">
+        <item name="android:layout_width">@dimen/itemHeight</item>
+        <item name="android:layout_height">@dimen/itemHeight</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="listViewHeaderItemButtonStyle">
+        <item name="android:layout_width">@dimen/itemHeight</item>
+        <item name="android:layout_height">@dimen/itemHeight</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+</resources>
